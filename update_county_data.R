@@ -43,7 +43,7 @@ getLastTweet <- function(table.name, search_term){
 
 # step #1
 tweetid.query <- getLastTweet(table_name, search_term)
-if(grepl("u'Count': 1", tweetid.query)){
+if(grepl("'Count': 1", tweetid.query)){
   # get last.tweetid, use grep instead of fromJSON so we don't have to worry
   # about malformed JSON
   last.tweetid <- substring(tweetid.query,
@@ -56,7 +56,8 @@ if(grepl("u'Count': 1", tweetid.query)){
 
 # step #2
 tweets.json <- twitter_search(term="cook county", count=100, 
-                              geocode="41.8607,-87.6408,30mi",
+                              #geocode="41.8607,-87.6408,30mi",
+                              geocode="",
                               since_id=last.tweetid)
 tweets <- fromJSON(tweets.json, asText=TRUE)
 # step #3
