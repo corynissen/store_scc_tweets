@@ -55,7 +55,8 @@ if(grepl("u'Count': 1", tweetid.query)){
 }
 
 # step #2
-tweets.json <- twitter_search(term="cook county", count=100, geocode="",
+tweets.json <- twitter_search(term="cook county", count=100, 
+                              geocode="41.8607,-87.6408,30mi",
                               since_id=last.tweetid)
 tweets <- fromJSON(tweets.json, asText=TRUE)
 # step #3
