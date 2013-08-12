@@ -123,3 +123,7 @@ twitter_search = function(term, count = 100, geocode="41.8607,-87.6408,16mi",
 }
 
 #twitter_search("food poisoning")
+
+# scp -i ~/cn/chicago/keys/rserver.pem .chireply_twitter_creds ubuntu@107.22.187.183:/src/store_scc_tweets
+
+# copy over /etc/boto.cfg too.
