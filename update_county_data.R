@@ -1,37 +1,10 @@
 
-library(RJSONIO)
-source("search.R")
+source("dynamo_scripts.R")
 
 table_name <- "cory_tweets"
-search_term <- "cook_county"
-
-#tweet.list <- tweets$statuses[[3]]
-uploadTweet <- function(tweet.list, table.name, search_term){
-  # input: single tweet in list form, will transform to json within function
-  # input: table is the table name in dynamo
-  time.pretty <- tweet.list$created_at
-  tweet.id <- tweet.list$id_str
-  author <- tweet.list$user$screen_name
-  text <- gsub("'", "'\\\\''", tweet.list$text)
-  text <- iconv(text, "", "ASCII", "")
-  message.body <- toJSON(tweet.list)
-  message.body <- gsub("'", "'\\\\''", message.body)
-  message.body <- iconv(message.body, "", "ASCII", "")
-  
-  ret.val <- system(paste0("python upload_tweet_to_dynamo.py \'", table.name,
-                           "\' \'", message.body, "\' \'", tweet.id, "\' \'",
-                           text, "\' \'", author, "\' \'", time.pretty, "\' \'",
-                           search_term, "\' "), intern=T)
-
-} # uploadTweet(tweet.list, "cory_twitter", search_term)
-
-getLastTweet <- function(table.name, search_term){
-  # read the most recent message for a given search_term
-  ret.val <- system(paste0("python read_last_tweet_from_dynamo.py \'",
-                           table.name, "\' \'", search_term, "\'"), intern=T)
-  return(ret.val)
-} # getLastTweet(table.name="cory_tweets", search_term="cook_county")
-
+table_search_term <- "cook_county"
+search_term <- "cook county"
+geocode <- "44.96,-93.2117,11mi"
 
 ################################################################################
 # Run here...
@@ -42,7 +15,7 @@ getLastTweet <- function(table.name, search_term){
 # 3. upload the new tweets to dynamo
 
 # step #1
-tweetid.query <- getLastTweet(table_name, search_term)
+tweetid.query <- getLastTweet(table_name, table_search_term)
 if(grepl("'Count': 1", tweetid.query)){
   # get last.tweetid, use grep instead of fromJSON so we don't have to worry
   # about malformed JSON
@@ -55,10 +28,8 @@ if(grepl("'Count': 1", tweetid.query)){
 }
 
 # step #2
-tweets.json <- twitter_search(term="cook county", count=100, 
-                              #geocode="41.8607,-87.6408,30mi",
-                              geocode="",
+tweets.json <- twitter_search(term=search_term, count=100, geocode=geocode,
                               since_id=last.tweetid)
 tweets <- fromJSON(tweets.json, asText=TRUE)
 # step #3
-lapply(tweets$statuses, function(x)uploadTweet(x, "cory_tweets", search_term))
+lapply(tweets$statuses, function(x)uploadTweet(x, table_name, table_search_term))
