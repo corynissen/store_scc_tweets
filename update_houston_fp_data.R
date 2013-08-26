@@ -2,7 +2,7 @@
 source("dynamo_scripts.R")
 
 table_name <- "cory_tweets"
-table_search_term <- "houson_food_poisoning"
+table_search_term <- "houston_food_poisoning"
 search_term <- "food poisoning"
 geocode <- "29.7405,-95.3586,28mi"
 
