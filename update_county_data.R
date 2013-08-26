@@ -4,7 +4,7 @@ source("dynamo_scripts.R")
 table_name <- "cory_tweets"
 table_search_term <- "cook_county"
 search_term <- "cook county"
-geocode <- "44.96,-93.2117,11mi"
+geocode <- "41.8607,-87.6408,16mi"
 
 ################################################################################
 # Run here...
